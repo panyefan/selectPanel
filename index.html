@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <title>jQuery移动端动态四级联动选择面板</title>
+        <link rel="stylesheet" href="./css/selectPanel.css?v=1.0">
+    </head>
+    <body>
+        <label for="Addr" id="areaLabel" class="address">
+            <span>经营类型</span>
+            <input type="text" name="Addr" id="Addr" readonly placeholder="请选择经营类型">
+        </label>
+        <div id="selectWrapper">
+            <div id="selectContext">
+                <div class="tip">
+                    <h3>经营类型</h3>
+                    <button type="button" id="cancel"></button>
+                </div>
+                <div id="select-wrap">
+                    <ul class="selected-column">
+                        <li class="lastarea" id="lastselect1">请选择</li>
+                        <li class="lastarea" id="lastselect2">请选择</li>
+                        <li class="lastarea" id="lastselect3">请选择</li>
+                        <li class="lastarea" id="lastselect4">请选择</li>
+                    </ul>
+                    <div class="select-content">
+                        <ul id="select1"></ul>
+                        <ul id="select2"></ul>
+                        <ul id="select3"></ul>
+                        <ul id="select4"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./js/jquery.min.js?v=1.0"></script>
+        <script src="./js/selectPanel.js?v=1.0"></script>
+        <script>
+            $(function () {
+                // 地址选择器遮罩层打开与关闭
+                $("#areaLabel").click(function (e) {
+                    $("#selectWrapper").show();
+                    e.stopPropagation();
+                });
+                $(document).click(function () {
+                    $("#selectWrapper").hide();
+                });
+                $("#cancel").click(function () {
+                    $("#selectWrapper").hide();
+                });
+                $("#selectContext").click(function (e) {
+                    e.stopPropagation();
+                });
+                
+                var list = [
+                    [
+                        { "code": "0", "name": "个人", "parentId": "0" }, 
+                        { "code": "1", "name": "企业", "parentId": "1" }
+                    ], 
+                    [
+                        { "code": "1000", "name": "餐饮/食品", "parentId": "0" }, 
+                        { "code": "1001", "name": "线下零售", "parentId": "0" }
+                    ], 
+                    [
+                        { "code": "2001", "name": "食品", "parentId": "1000" }, 
+                        { "code": "2002", "name": "餐饮", "parentId": "1000" }, 
+                        { "code": "2003", "name": "便利店", "parentId": "1001" }, 
+                        { "code": "2004", "name": "其他零售", "parentId": "1001" }
+                    ],
+                    [
+                        { "code": "3001", "name": "熟食加工", "parentId": "2001" }, 
+                        { "code": "3002", "name": "餐饮加工", "parentId": "2001" }
+                    ]
+                ];
+                
+
+                initAddress(list);
+            });
+
+            //初始化地址选择
+            function initAddress(list) {
+                $("#Addr").selectPanel({
+                    containerId: 'selectWrapper',
+                    list: list,
+                    getSelectedCode: function () { return $("#Addr").data("code"); },
+                    callback: function (data) {
+                        var code = data.select4.code !== undefined ? data.select4.code : data.select3.code !== undefined ? data.select3.code : (data.select2.code !== undefined ? data.select2.code : (data.select1.code || ''));
+                        var name = data.select4.name !== undefined ? data.select4.name : data.select3.name !== undefined ? data.select3.name : (data.select2.name !== undefined ? data.select2.name : (data.select1.name || ''));
+                        $("#Addr").val(name).data("code", code);
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

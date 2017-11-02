@@ -25,3 +25,4 @@ var list = [
         ]
     ];
 ```
+![image](https://github.com/panyefan/selectPanel/blob/master/image/showview.gif)
